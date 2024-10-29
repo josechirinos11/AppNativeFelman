@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { View, Dimensions, Modal, StyleSheet } from 'react-native'
-import { Image, Button, Text, H1, Input, Stack, FormControl, Item, Toast } from 'native-base'
+import { View, Dimensions, Modal, StyleSheet, ScrollView } from 'react-native'
+import { Image, Button, Text, H1, Input, Stack, FormControl, Box, Toast } from 'native-base'
 import { useNavigation } from '@react-navigation/native'
 import globalStyles from '../styles/global';
 
@@ -101,7 +101,7 @@ const CrearCuenta = () => {
 
   return (
 
-    <View style={[globalStyles.contenedor, { backgroundColor: 'rgb(209 213 219)', width: width, height: height }]}>
+    <View style={[globalStyles.contenedor, {  width: width, height: height }]}>
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Image
@@ -109,7 +109,7 @@ const CrearCuenta = () => {
           alt="Descripción de la imagen"
           width={150}
           height={75}
-          borderRadius={10}
+
         />
       </View>
 
@@ -121,48 +121,60 @@ const CrearCuenta = () => {
 
 
         <FormControl style={globalStyles.formulario}>
-          <Stack space={5}>
-            <Stack>
-              <FormControl.Label>NOMBRE</FormControl.Label>
-              <Input
-                autoCompleteType="nombre"
-                placeholder="Tu Nombre"
-                onChangeText={texto => guardarNombre(texto.toLowerCase())}
-                value={nombre}
-              />
-            </Stack>
 
-            <Stack>
-              <FormControl.Label>EMAIL</FormControl.Label>
-              <Input
-                autoCompleteType="email"
-                placeholder="Email de registro"
-                onChangeText={texto => guardarEmail(texto.toLowerCase())}
-                value={email}
-              />
-            </Stack>
+          <Text style={globalStyles.tituloPrincipales}>
+            Crear Cuenta
+          </Text>
 
-            <Stack>
-              <FormControl.Label>PASSWORD</FormControl.Label>
-              <Input
-                secureTextEntry={true}
-                placeholder="Password"
-                onChangeText={texto => guardarPassword(texto.toLowerCase())}
-                value={password}
-              />
-            </Stack>
+          <ScrollView
+            style={{ maxHeight: 300 }} // Ajusta la altura aquí según lo que necesites
+            contentContainerStyle={{ paddingBottom: 100 }} // Espacio extra al final para scroll suave
+            showsVerticalScrollIndicator={true}
+          >
 
-            <Stack>
-              <FormControl.Label>REPETIR PASSWORD</FormControl.Label>
-              <Input
+            <Stack space={4}>
+              <Stack>
+                <FormControl.Label>NOMBRE</FormControl.Label>
+                <Input
+                  autoCompleteType="nombre"
+                  placeholder="Tu Nombre"
+                  onChangeText={texto => guardarNombre(texto.toLowerCase())}
+                  value={nombre}
+                />
+              </Stack>
 
-                secureTextEntry={true}
-                placeholder="Repetir Password"
-                onChangeText={texto => guardarRepetirPassword(texto)}
-                value={repetirPassword}
-              />
+              <Stack>
+                <FormControl.Label>EMAIL</FormControl.Label>
+                <Input
+                  autoCompleteType="email"
+                  placeholder="Email de registro"
+                  onChangeText={texto => guardarEmail(texto.toLowerCase())}
+                  value={email}
+                />
+              </Stack>
+
+              <Stack>
+                <FormControl.Label>PASSWORD</FormControl.Label>
+                <Input
+                  secureTextEntry={true}
+                  placeholder="Password"
+                  onChangeText={texto => guardarPassword(texto.toLowerCase())}
+                  value={password}
+                />
+              </Stack>
+
+              <Stack>
+                <FormControl.Label>REPETIR PASSWORD</FormControl.Label>
+                <Input
+
+                  secureTextEntry={true}
+                  placeholder="Repetir Password"
+                  onChangeText={texto => guardarRepetirPassword(texto)}
+                  value={repetirPassword}
+                />
+              </Stack>
             </Stack>
-          </Stack>
+          </ScrollView>
         </FormControl>
 
         <Button
@@ -172,7 +184,7 @@ const CrearCuenta = () => {
         >
           <Text
             style={globalStyles.botonTexto}
-          >Iniciar Sesión</Text>
+          >Crear Cuenta</Text>
         </Button>
 
         <Modal
@@ -186,8 +198,13 @@ const CrearCuenta = () => {
           <View style={styles.overlay}>
             <View style={styles.modalContent}>
               <Text style={styles.message}>{mensaje}</Text>
-              <Button onPress={() => setModalVisible(false)}>
-                <Text>Cerrar</Text>
+              <Button
+                style={{ backgroundColor: 'rgb(239, 68, 68)'} }
+                onPress={() => setModalVisible(false)}
+              >
+                <Text
+                 style={{ color: 'white'} }
+                >Cerrar</Text>
               </Button>
             </View>
           </View>
@@ -195,11 +212,11 @@ const CrearCuenta = () => {
 
         <View style={globalStyles.footerForm}>
           <Text
-            onPress={() => navigation.navigate("CrearCuenta")}
+            onPress={() => navigation.navigate("Login")}
             style={globalStyles.enlace}
           >¿Ya tienes una cuenta? Inicia Sesión</Text>
           <Text
-            onPress={() => navigation.navigate("CrearCuenta")}
+            onPress={() => navigation.navigate("OlvidePassword")}
             style={globalStyles.enlace}
           >Olvidé mi Password</Text>
         </View>
@@ -230,6 +247,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   message: {
+    
     marginBottom: 20,
   },
 });

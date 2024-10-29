@@ -12,6 +12,7 @@ const Stack = createStackNavigator();
 
 import Login from './views/Login';
 import CrearCuenta from './views/CrearCuenta';
+import OlvidePassword from './views/OlvidePassword';
 
 const App = () => {
   const { width } = Dimensions.get('window');
@@ -24,16 +25,7 @@ const App = () => {
     <NativeBaseProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="CrearCuenta" >
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{
-              title: "Iniciar Sesión en felman",
-              headerShown: false
-            }}
-          />
-
-
+          
           <Stack.Screen
             name="CrearCuenta"
             component={CrearCuenta}
@@ -50,8 +42,36 @@ const App = () => {
             }}
           />
 
-
-
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              title: "Login",
+              headerShown: false,
+              headerStyle: {
+                backgroundColor: '#28303B'
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold'
+              }
+            }}
+          />
+          <Stack.Screen
+            name="OlvidePassword"
+            component={OlvidePassword}
+            options={{
+              title: "Olvide Password",
+              headerShown: false,
+              headerStyle: {
+                backgroundColor: '#28303B'
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold'
+              }
+            }}
+          />
 
 
         </Stack.Navigator>

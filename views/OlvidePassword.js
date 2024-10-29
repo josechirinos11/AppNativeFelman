@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react'
 import { View, Dimensions, Modal, StyleSheet, ScrollView } from 'react-native'
 import { Image, Button, Text, H1, Input, Stack, FormControl, Item, Toast } from 'native-base'
@@ -5,7 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import globalStyles from '../styles/global';
 
 
-const Login = () => {
+const OlvidePassword = () => {
 
 
   const { width, height } = Dimensions.get('window');
@@ -101,7 +103,7 @@ const Login = () => {
 
   return (
 
-    <View style={[globalStyles.contenedor, {  width: width, height: height }]}>
+    <View style={[globalStyles.contenedor, { width: width, height: height }]}>
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Image
@@ -123,7 +125,7 @@ const Login = () => {
         <FormControl style={globalStyles.formulario}>
 
           <Text style={globalStyles.tituloPrincipales}>
-            Iniciar Sesion
+            Recuperacion de Password
           </Text>
 
           <ScrollView
@@ -142,16 +144,6 @@ const Login = () => {
                   placeholder="Email de registro"
                   onChangeText={texto => guardarEmail(texto.toLowerCase())}
                   value={email}
-                />
-              </Stack>
-
-              <Stack>
-                <FormControl.Label>PASSWORD</FormControl.Label>
-                <Input
-                  secureTextEntry={true}
-                  placeholder="Password"
-                  onChangeText={texto => guardarPassword(texto.toLowerCase())}
-                  value={password}
                 />
               </Stack>
 
@@ -195,13 +187,13 @@ const Login = () => {
 
         <View style={globalStyles.footerForm}>
           <Text
+            onPress={() => navigation.navigate("Login")}
+            style={globalStyles.enlace}
+          >¿Ya tienes una cuenta? Inicia Sesión</Text>
+          <Text
             onPress={() => navigation.navigate("CrearCuenta")}
             style={globalStyles.enlace}
           >Crear Cuenta</Text>
-          <Text
-            onPress={() => navigation.navigate("OlvidePassword")}
-            style={globalStyles.enlace}
-          >Olvidé mi Password</Text>
         </View>
 
 
@@ -211,6 +203,7 @@ const Login = () => {
 
 
   
+
 
   );
 }
@@ -236,4 +229,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default OlvidePassword;

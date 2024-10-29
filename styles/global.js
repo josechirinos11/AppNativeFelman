@@ -3,19 +3,24 @@ import { StyleSheet, YellowBox } from 'react-native';
 const globalStyles = StyleSheet.create({
     contenedor: {
         flex: 1,
-
+        backgroundColor: 'rgb(243 244 246)'
     },
     formulario: {
-        marginTop: 5,
-        flex: 10,
-        backgroundColor: 'white',
-        width: '90%'
+
+        flex: 20,
+
+        width: '90%',
+        height: '100%',
+
+
+
 
     },
     footerForm: {
+
         flexDirection: 'row',
         width: '100%',
-        flex: 1,
+        flex: 2,
         justifyContent: 'space-between', // Distribuye espacio entre los elementos
         alignItems: 'center', // Alinea verticalmente los hijos en el centro
     },
@@ -64,12 +69,12 @@ const globalStyles = StyleSheet.create({
         marginBottom: 20
     },
     boton: {
-        paddingTop: 10,
+
         flex: 1,
         backgroundColor: 'rgb(239, 68, 68)',  // Color de fondo
-        height: '40%',                            // Altura deseada
+
         width: '70%',                          // Ancho deseado (puedes ajustar el porcentaje o usar un valor fijo)
-        marginVertical: 10,                   // Espacio vertical alrededor del botón
+        marginTop: 10,                   // Espacio vertical alrededor del botón
         justifyContent: 'center',              // Centrar texto verticalmente
         alignItems: 'center',                  // Centrar texto horizontalmente
 
@@ -89,6 +94,22 @@ const globalStyles = StyleSheet.create({
 
         fontSize: 10,
 
+    },
+    tituloPrincipales: {
+        paddingTop: 15,
+        fontSize: 32, // Equivalente a "text-4xl"
+        fontWeight: '600', // Equivalente a "font-semibold"
+        fontStyle: 'italic', // Equivalente a "italic"
+        color: '#e20613', // Color rojo
+        fontFamily: 'sans-serif', // Fuente sans-serif
+        lineHeight: 30,
+        //position: 'absolute', // Posición absoluta
+        //bottom: 10, // Hacia la parte inferior
+        right: 10, // Hacia la derecha
+
+        textShadowColor: 'rgba(0, 0, 0, 0.5)', // Sombra
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
     }
 });
 
