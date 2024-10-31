@@ -20,18 +20,26 @@ const CrearCuenta = () => {
   const [password, guardarPassword] = useState('123456');
 
   const [mensaje, guardarMensaje] = useState(null);
-
+  const [textBoton, setTextBoton] = useState('Crear Cuenta')
+  const [habilitarboton, setHabilitarboton] = useState(false) 
   // React navigation
   const navigation = useNavigation();
 
 
   // Cuando el usuario presiona en iniciar sesion
   const handleSubmit = async () => {
+    setTextBoton('Cargando.......')
+    setHabilitarboton(true)
+
+
+    
     // validar
     if (nombre === '' || email === '' || password === '' || repetirPassword === '') {
       // Mostrar un error
       guardarMensaje('Todos los campos son obligatorios');
       setModalVisible(true)
+      setTextBoton('Crear Cuenta')
+    setHabilitarboton(false)
       return;
     }
 
@@ -39,6 +47,8 @@ const CrearCuenta = () => {
     if (password !== repetirPassword) {
       guardarMensaje('Las contraseñas no coinciden');
       setModalVisible(true);
+      setTextBoton('Crear Cuenta')
+    setHabilitarboton(false)
       return;
     }
 
@@ -72,6 +82,8 @@ const CrearCuenta = () => {
         guardarEmail('');
         guardarPassword('');
         guardarRepetirPassword('');
+        setTextBoton('Crear Cuenta')
+    setHabilitarboton(false)
 
         // Opcional: navegar a otra pantalla si el usuario fue creado
         navigation.navigate('Login');
@@ -79,6 +91,8 @@ const CrearCuenta = () => {
         // Mostrar el error del servidor
         guardarMensaje(resultado.msg || 'Hubo un error al crear el usuario');
         setModalVisible(true);
+        setTextBoton('Crear Cuenta')
+    setHabilitarboton(false)
       }
 
     } catch (error) {
@@ -86,6 +100,8 @@ const CrearCuenta = () => {
       console.error('Error al crear usuario:', error);
       guardarMensaje('Error de conexión con el servidor');
       setModalVisible(true);
+      setTextBoton('Crear Cuenta')
+    setHabilitarboton(false)
     }
 
   }
@@ -181,10 +197,11 @@ const CrearCuenta = () => {
           borderRadius="full"
           style={globalStyles.boton}
           onPress={() => handleSubmit()}
+          isDisabled={habilitarboton}
         >
           <Text
             style={globalStyles.botonTexto}
-          >Crear Cuenta</Text>
+          >{textBoton}</Text>
         </Button>
 
         <Modal
@@ -201,6 +218,7 @@ const CrearCuenta = () => {
               <Button
                 style={{ backgroundColor: 'rgb(239, 68, 68)'} }
                 onPress={() => setModalVisible(false)}
+                
               >
                 <Text
                  style={{ color: 'white'} }

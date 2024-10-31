@@ -13,6 +13,7 @@ const Stack = createStackNavigator();
 import Login from './views/Login';
 import CrearCuenta from './views/CrearCuenta';
 import OlvidePassword from './views/OlvidePassword';
+import Dashboard from './views/Dashboard'
 
 const App = () => {
   const { width } = Dimensions.get('window');
@@ -62,6 +63,22 @@ const App = () => {
             component={OlvidePassword}
             options={{
               title: "Olvide Password",
+              headerShown: false,
+              headerStyle: {
+                backgroundColor: '#28303B'
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold'
+              }
+            }}
+          />
+
+<Stack.Screen
+            name="Dashboard"
+            component={Dashboard}
+            options={{
+              title: "Panel de control",
               headerShown: false,
               headerStyle: {
                 backgroundColor: '#28303B'

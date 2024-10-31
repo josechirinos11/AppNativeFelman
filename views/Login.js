@@ -14,45 +14,49 @@ const Login = () => {
   // State del formulario
   // Estado para controlar la visibilidad del modal
   const [modalVisible, setModalVisible] = useState(false);
-  const [nombre, guardarNombre] = useState('hijo');
+
   const [email, guardarEmail] = useState('hijo@hijo.com');
-  const [repetirPassword, guardarRepetirPassword] = useState('123456');
+  
   const [password, guardarPassword] = useState('123456');
 
   const [mensaje, guardarMensaje] = useState(null);
-
+  const [textBoton, setTextBoton] = useState('Iniciar Sesion')
+  const [habilitarboton, setHabilitarboton] = useState(false) 
   // React navigation
   const navigation = useNavigation();
 
 
   // Cuando el usuario presiona en iniciar sesion
   const handleSubmit = async () => {
+    setTextBoton('Cargando.......')
+    setHabilitarboton(true)
+
+
+
+
     // validar
-    if (nombre === '' || email === '' || password === '' || repetirPassword === '') {
+    if (email === '' || password === '') {
       // Mostrar un error
       guardarMensaje('Todos los campos son obligatorios');
       setModalVisible(true)
+      setTextBoton('Iniciar Sesion')
+      setHabilitarboton(false)
       return;
     }
 
-    // Validar que las contraseñas coincidan
-    if (password !== repetirPassword) {
-      guardarMensaje('Las contraseñas no coinciden');
-      setModalVisible(true);
-      return;
-    }
+   
 
 
     try {
       // Preparar los datos para la petición
       const usuario = {
-        nombre,
+     
         email,
         password
       };
 
       // Petición al backend
-      const respuesta = await fetch('http://192.168.1.133:4000/felman/usuarios', {
+      const respuesta = await fetch('http://192.168.1.133:4000/felman/usuarios/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -62,23 +66,29 @@ const Login = () => {
 
       const resultado = await respuesta.json();
 
+      console.log('el resultado es :  ', resultado)
+
       // Manejar la respuesta del servidor
       if (respuesta.ok) {
-        guardarMensaje('Usuario creado con éxito');
+        guardarMensaje('Cargando Sesion');
         setModalVisible(true);
+        setTextBoton('Iniciar Sesion')
+      setHabilitarboton(false)
 
         // Opcional: limpiar el formulario
-        guardarNombre('');
+
         guardarEmail('');
         guardarPassword('');
-        guardarRepetirPassword('');
+     
 
         // Opcional: navegar a otra pantalla si el usuario fue creado
-        navigation.navigate('Login');
+        navigation.navigate('Dashboard');
       } else {
         // Mostrar el error del servidor
         guardarMensaje(resultado.msg || 'Hubo un error al crear el usuario');
         setModalVisible(true);
+        setTextBoton('Iniciar Sesion')
+      setHabilitarboton(false)
       }
 
     } catch (error) {
@@ -86,6 +96,8 @@ const Login = () => {
       console.error('Error al crear usuario:', error);
       guardarMensaje('Error de conexión con el servidor');
       setModalVisible(true);
+      setTextBoton('Iniciar Sesion')
+      setHabilitarboton(false)
     }
 
   }
@@ -164,10 +176,11 @@ const Login = () => {
           borderRadius="full"
           style={globalStyles.boton}
           onPress={() => handleSubmit()}
+          isDisabled={habilitarboton}
         >
           <Text
             style={globalStyles.botonTexto}
-          >Iniciar Sesión</Text>
+          >{textBoton}</Text>
         </Button>
 
         <Modal

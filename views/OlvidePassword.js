@@ -16,10 +16,11 @@ const OlvidePassword = () => {
   // State del formulario
   // Estado para controlar la visibilidad del modal
   const [modalVisible, setModalVisible] = useState(false);
-  const [nombre, guardarNombre] = useState('hijo');
+
   const [email, guardarEmail] = useState('hijo@hijo.com');
-  const [repetirPassword, guardarRepetirPassword] = useState('123456');
-  const [password, guardarPassword] = useState('123456');
+ 
+  const [textBoton, setTextBoton] = useState('Siguiente')
+  const [habilitarboton, setHabilitarboton] = useState(false) 
 
   const [mensaje, guardarMensaje] = useState(null);
 
@@ -29,32 +30,31 @@ const OlvidePassword = () => {
 
   // Cuando el usuario presiona en iniciar sesion
   const handleSubmit = async () => {
+
+    setTextBoton('Cargando.......')
+    setHabilitarboton(true)
+
     // validar
-    if (nombre === '' || email === '' || password === '' || repetirPassword === '') {
+    if (email === '') {
       // Mostrar un error
       guardarMensaje('Todos los campos son obligatorios');
       setModalVisible(true)
+      setTextBoton('Siguiente')
+      setHabilitarboton(false)
       return;
     }
 
-    // Validar que las contraseñas coincidan
-    if (password !== repetirPassword) {
-      guardarMensaje('Las contraseñas no coinciden');
-      setModalVisible(true);
-      return;
-    }
 
 
     try {
       // Preparar los datos para la petición
       const usuario = {
-        nombre,
-        email,
-        password
+      
+        email
       };
 
       // Petición al backend
-      const respuesta = await fetch('http://192.168.1.133:4000/felman/usuarios', {
+      const respuesta = await fetch('http://192.168.1.133:4000/felman/usuarios/olvide-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -70,17 +70,19 @@ const OlvidePassword = () => {
         setModalVisible(true);
 
         // Opcional: limpiar el formulario
-        guardarNombre('');
-        guardarEmail('');
-        guardarPassword('');
-        guardarRepetirPassword('');
 
+        guardarEmail('');
+      
+        setTextBoton('Siguiente')
+        setHabilitarboton(false)
         // Opcional: navegar a otra pantalla si el usuario fue creado
-        navigation.navigate('Login');
+        navigation.navigate('Dashboard');
       } else {
         // Mostrar el error del servidor
         guardarMensaje(resultado.msg || 'Hubo un error al crear el usuario');
         setModalVisible(true);
+        setTextBoton('Siguiente')
+        setHabilitarboton(false)
       }
 
     } catch (error) {
@@ -88,6 +90,8 @@ const OlvidePassword = () => {
       console.error('Error al crear usuario:', error);
       guardarMensaje('Error de conexión con el servidor');
       setModalVisible(true);
+      setTextBoton('Siguiente')
+      setHabilitarboton(false)
     }
 
   }
@@ -156,10 +160,11 @@ const OlvidePassword = () => {
           borderRadius="full"
           style={globalStyles.boton}
           onPress={() => handleSubmit()}
+          isDisabled={habilitarboton}
         >
           <Text
             style={globalStyles.botonTexto}
-          >Iniciar Sesión</Text>
+          >{textBoton}</Text>
         </Button>
 
         <Modal
