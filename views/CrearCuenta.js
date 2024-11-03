@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { View, Dimensions, Modal, StyleSheet, ScrollView } from 'react-native'
 import { Image, Button, Text, H1, Input, Stack, FormControl, Box, Toast } from 'native-base'
 import { useNavigation } from '@react-navigation/native'
 import globalStyles from '../styles/global';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const CrearCuenta = () => {
@@ -19,11 +20,42 @@ const CrearCuenta = () => {
   const [repetirPassword, guardarRepetirPassword] = useState('123456');
   const [password, guardarPassword] = useState('123456');
 
+  
+
   const [mensaje, guardarMensaje] = useState(null);
   const [textBoton, setTextBoton] = useState('Crear Cuenta')
   const [habilitarboton, setHabilitarboton] = useState(false) 
   // React navigation
   const navigation = useNavigation();
+
+
+
+  useEffect(() => {
+    const verificarAutenticacion = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        const emailUser = await AsyncStorage.getItem('email');
+        const nombreUser = await AsyncStorage.getItem('nombre');
+  
+        if (token) { // Verificar si el token existe
+          console.log('Nombre:', nombreUser ? nombreUser : 'Nombre no disponible');
+          console.log('Email:', emailUser ? emailUser : 'Email no disponible');
+  
+          // Navegar solo si el token está presente
+          navigation.navigate('AppLayout');
+        } else {
+          console.log('Token no encontrado, redirigiendo al inicio de sesión.');
+        }
+      } catch (error) {
+        console.error('Error al obtener datos de AsyncStorage:', error);
+      }
+    };
+  
+    verificarAutenticacion();
+  }, []);
+  
+
+
 
 
   // Cuando el usuario presiona en iniciar sesion

@@ -3,6 +3,8 @@ import { View, Dimensions, Modal, StyleSheet, ScrollView } from 'react-native'
 import { Image, Button, Text, H1, Input, Stack, FormControl, Item, Toast } from 'native-base'
 import { useNavigation } from '@react-navigation/native'
 import globalStyles from '../styles/global';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 const Login = () => {
@@ -44,7 +46,15 @@ const Login = () => {
       return;
     }
 
-   
+   // Validar formato de email
+   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+   if (!emailRegex.test(email)) {
+     guardarMensaje('Formato de email no válido');
+     setModalVisible(true);
+     setTextBoton('Iniciar Sesión');
+     setHabilitarboton(false);
+     return;
+   }
 
 
     try {
@@ -70,10 +80,15 @@ const Login = () => {
 
       // Manejar la respuesta del servidor
       if (respuesta.ok) {
+
         guardarMensaje('Cargando Sesion');
         setModalVisible(true);
         setTextBoton('Iniciar Sesion')
       setHabilitarboton(false)
+      // Guardar datos en AsyncStorage
+  await AsyncStorage.setItem('token', resultado.token); // Guarda el token
+  await AsyncStorage.setItem('email', resultado.email); // Guarda el correo
+  await AsyncStorage.setItem('nombre', resultado.nombre); // Guarda el correo
 
         // Opcional: limpiar el formulario
 
@@ -82,7 +97,7 @@ const Login = () => {
      
 
         // Opcional: navegar a otra pantalla si el usuario fue creado
-        navigation.navigate('Dashboard');
+        navigation.navigate('AppLayout');
       } else {
         // Mostrar el error del servidor
         guardarMensaje(resultado.msg || 'Hubo un error al crear el usuario');
@@ -93,7 +108,7 @@ const Login = () => {
 
     } catch (error) {
       // Manejo de errores
-      console.error('Error al crear usuario:', error);
+      console.error('Error al iniciar sesion:', error);
       guardarMensaje('Error de conexión con el servidor');
       setModalVisible(true);
       setTextBoton('Iniciar Sesion')

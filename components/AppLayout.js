@@ -12,7 +12,7 @@ import mesaCristal from '../img/mesaCristal.png'
 import despacho from '../img/despacho.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Login = () => {
+const AppLayout = () => {
   const { width, height } = Dimensions.get('window');
 
   const [nombreUser, setNombreUser] = useState(null); // Estado para el nombre del usuario
@@ -43,6 +43,7 @@ const Login = () => {
           // El token existe, el usuario está autenticado
           setNombreUser(nombreUser); // Establecer el nombre del usuario
           setEmailUser(emailUser); // Establecer el email del usuario
+          console.log('nombre desde Layout');
           console.log('nombre:', nombreUser);
           console.log('Email:', emailUser);
         } else {
@@ -62,7 +63,7 @@ const Login = () => {
     <View style={[globalStyles.contenedor, { width: width, height: height }]}>
       <NavMenu nombreUser={nombreUser} emailUser={emailUser} />
 
-      <Titulo texto='Dashboard'/>
+      <Titulo texto='App Layout'/>
 
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.cardContainer}>
@@ -122,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default AppLayout;

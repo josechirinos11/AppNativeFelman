@@ -110,7 +110,39 @@ const globalStyles = StyleSheet.create({
         textShadowColor: 'rgba(0, 0, 0, 0.5)', // Sombra
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 2,
-    }
+    },
+    MenuPrincipal: {
+        backgroundColor: 'rgb(239, 68, 68)', // Color de fondo
+    borderColor: 'white', // Color del borde
+    borderWidth: 1, // Ancho del borde
+    borderRadius: 8, // Radio de esquina del borde
+    // Propiedades de sombra para iOS
+    shadowColor: 'red', // Color de la sombra
+    shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra
+    shadowOpacity: 0.3, // Opacidad de la sombra
+    shadowRadius: 4, // Radio de difuminado de la sombra
+    // Propiedades de sombra para Android
+    elevation: 10, // Elevación para sombra en Android
+    },
+    MenuSecundario: {
+       
+        backgroundColor: 'rgb(245, 108, 108)', // Color de fondo
+    borderColor: 'white', // Color del borde
+    borderWidth: 1, // Ancho del borde
+    borderRadius: 8, // Radio de esquina del borde
+    // Propiedades de sombra para iOS
+    shadowColor: 'white', // Color de la sombra
+    shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra
+    shadowOpacity: 0.3, // Opacidad de la sombra
+    shadowRadius: 4, // Radio de difuminado de la sombra
+    // Propiedades de sombra para Android
+    elevation: 10, // Elevación para sombra en Android
+    },
+    MenuItem: {
+        borderBottomColor: 'white', // Color del borde
+        borderBottomWidth: 1, // Ancho del borde
+        paddingVertical: 10, // Espaciado vertical del ítem
+    },
 });
 
 export default globalStyles;
