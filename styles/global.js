@@ -6,15 +6,10 @@ const globalStyles = StyleSheet.create({
         backgroundColor: 'rgb(243 244 246)'
     },
     formulario: {
-
         flex: 20,
-
         width: '90%',
         height: '100%',
-
-
-
-
+        backgroundColor: 'transparent', // Blanco con 80% de opacidad
     },
     footerForm: {
 
@@ -25,7 +20,7 @@ const globalStyles = StyleSheet.create({
         alignItems: 'center', // Alinea verticalmente los hijos en el centro
     },
     contenido: {
-        backgroundColor: 'white',  // Fondo en color claro
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', // Blanco con 80% de opacidad
         flex: 4,
         flexDirection: 'column',
         justifyContent: 'center',

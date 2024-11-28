@@ -24,6 +24,7 @@ export default function RecursosHumanos() {
       <NavMenu nombreUser={nombreUser} emailUser={emailUser} />
       <Text style={{ fontSize: 24, fontWeight: 'bold', paddingTop: 5 }}>{title}</Text>
       {item && <Text>Has clicado en: {item}</Text>}
+      
 
       
 

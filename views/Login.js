@@ -4,6 +4,7 @@ import { Image, Button, Text, H1, Input, Stack, FormControl, Item, Toast } from 
 import { useNavigation } from '@react-navigation/native'
 import globalStyles from '../styles/global';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ApiFetch } from '../config/apiFetch';
 
 
 
@@ -17,13 +18,13 @@ const Login = () => {
   // Estado para controlar la visibilidad del modal
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [email, guardarEmail] = useState('hijo@hijo.com');
-  
+  const [email, guardarEmail] = useState('No1@correo.com');
+
   const [password, guardarPassword] = useState('123456');
 
   const [mensaje, guardarMensaje] = useState(null);
   const [textBoton, setTextBoton] = useState('Iniciar Sesion')
-  const [habilitarboton, setHabilitarboton] = useState(false) 
+  const [habilitarboton, setHabilitarboton] = useState(false)
   // React navigation
   const navigation = useNavigation();
 
@@ -46,21 +47,21 @@ const Login = () => {
       return;
     }
 
-   // Validar formato de email
-   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-   if (!emailRegex.test(email)) {
-     guardarMensaje('Formato de email no válido');
-     setModalVisible(true);
-     setTextBoton('Iniciar Sesión');
-     setHabilitarboton(false);
-     return;
-   }
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      guardarMensaje('Formato de email no válido');
+      setModalVisible(true);
+      setTextBoton('Iniciar Sesión');
+      setHabilitarboton(false);
+      return;
+    }
 
 
     try {
       // Preparar los datos para la petición
       const usuario = {
-     
+
         email,
         password
       };
@@ -77,6 +78,10 @@ const Login = () => {
       const resultado = await respuesta.json();
 
       console.log('el resultado es :  ', resultado)
+      const rolUSER = resultado.rol
+      const dptoUSER = resultado.departamentos
+      console.log('el rol es :  ', rolUSER)
+      console.log('el departmentos es :  ', dptoUSER)
 
       // Manejar la respuesta del servidor
       if (respuesta.ok) {
@@ -84,17 +89,59 @@ const Login = () => {
         guardarMensaje('Cargando Sesion');
         setModalVisible(true);
         setTextBoton('Iniciar Sesion')
-      setHabilitarboton(false)
-      // Guardar datos en AsyncStorage
-  await AsyncStorage.setItem('token', resultado.token); // Guarda el token
-  await AsyncStorage.setItem('email', resultado.email); // Guarda el correo
-  await AsyncStorage.setItem('nombre', resultado.nombre); // Guarda el correo
+        setHabilitarboton(false)
+
+
+        // recreamos los departamentos de acuerdo a los roles del usuario
+        const actualizarDepartamentos = (rolUSER, dptoUSER) => {
+          // Mapeamos los departamentos
+          return dptoUSER.map(depto => {
+            // Si el title del departamento está en los roles del usuario, actualizamos sus items
+            if (rolUSER.includes(depto.title)) {
+              return {
+                ...depto,
+                items: depto.items.map(item => ({
+                  ...item,
+                  active: true,  // Activamos todos los items si el título está en los roles
+                })),
+              };
+            }
+        
+            // Si el title no está en los roles, dejamos los items desactivados
+            return {
+              ...depto,
+              items: depto.items.map(item => ({
+                ...item,
+                active: false, // Desactivamos los items si el título no está en los roles
+              })),
+            };
+          });
+        };
+
+
+
+
+
+
+
+        const departamentosSotarege = actualizarDepartamentos(rolUSER, dptoUSER);
+
+
+
+        // Guardar datos en AsyncStorage
+        const resultadoStr = JSON.stringify(resultado);
+       // console.log("Datos que se guardarán:", JSON.stringify(resultado, null, 2));
+        await AsyncStorage.setItem('usuario', resultadoStr); // Guarda el token
+        await AsyncStorage.setItem('token', resultado.token); // Guarda el token
+        await AsyncStorage.setItem('email', resultado.email); // Guarda el correo
+        await AsyncStorage.setItem('nombre', resultado.nombre); // Guarda el correo
+        await AsyncStorage.setItem('departamentos', JSON.stringify(departamentosSotarege)); // 
 
         // Opcional: limpiar el formulario
 
         guardarEmail('');
         guardarPassword('');
-     
+
 
         // Opcional: navegar a otra pantalla si el usuario fue creado
         navigation.navigate('AppLayout');
@@ -103,13 +150,13 @@ const Login = () => {
         guardarMensaje(resultado.msg || 'Hubo un error al crear el usuario');
         setModalVisible(true);
         setTextBoton('Iniciar Sesion')
-      setHabilitarboton(false)
+        setHabilitarboton(false)
       }
 
     } catch (error) {
       // Manejo de errores
       console.error('Error al iniciar sesion:', error);
-      guardarMensaje('Error de conexión con el servidor');
+      guardarMensaje('Error de conexión con el servidorrrrrr');
       setModalVisible(true);
       setTextBoton('Iniciar Sesion')
       setHabilitarboton(false)
@@ -128,14 +175,19 @@ const Login = () => {
 
   return (
 
-    <View style={[globalStyles.contenedor, {  width: width, height: height }]}>
+    <View style={[globalStyles.contenedor, { width: width, height: height }]}>
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 120 }}>
         <Image
-          source={require('../img/felman.png')}
+          source={require('../img/YouApp.png')}
           alt="Descripción de la imagen"
-          width={150}
-          height={75}
+          style={{
+            width: '90%', // Ajusta el ancho al 90% de la pantalla
+            height: undefined, // Deja que la altura se ajuste automáticamente
+            aspectRatio: 1, // Mantén las proporciones originales de la imagen
+            resizeMode: 'contain', // Asegura que la imagen no se recorte
+
+          }}
 
         />
       </View>
@@ -145,12 +197,10 @@ const Login = () => {
 
       <View style={globalStyles.contenido}>
 
-
-
         <FormControl style={globalStyles.formulario}>
 
           <Text style={globalStyles.tituloPrincipales}>
-            Iniciar Sesion
+            Login
           </Text>
 
           <ScrollView
@@ -160,7 +210,7 @@ const Login = () => {
           >
 
             <Stack space={4}>
-              
+
 
               <Stack>
                 <FormControl.Label>EMAIL</FormControl.Label>
@@ -182,7 +232,7 @@ const Login = () => {
                 />
               </Stack>
 
-              
+
             </Stack>
           </ScrollView>
         </FormControl>
@@ -210,11 +260,11 @@ const Login = () => {
             <View style={styles.modalContent}>
               <Text style={styles.message}>{mensaje}</Text>
               <Button
-                style={{ backgroundColor: 'rgb(239, 68, 68)'} }
+                style={{ backgroundColor: 'rgb(239, 68, 68)' }}
                 onPress={() => setModalVisible(false)}
               >
                 <Text
-                 style={{ color: 'white'} }
+                  style={{ color: 'white' }}
                 >Cerrar</Text>
               </Button>
             </View>
@@ -238,7 +288,7 @@ const Login = () => {
     </View>
 
 
-  
+
 
   );
 }

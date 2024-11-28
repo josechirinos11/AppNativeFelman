@@ -151,12 +151,17 @@ const CrearCuenta = () => {
 
     <View style={[globalStyles.contenedor, {  width: width, height: height }]}>
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 120 }}>
         <Image
-          source={require('../img/felman.png')}
+          source={require('../img/YouApp.png')}
           alt="Descripción de la imagen"
-          width={150}
-          height={75}
+          style={{
+            width: '90%', // Ajusta el ancho al 90% de la pantalla
+            height: undefined, // Deja que la altura se ajuste automáticamente
+            aspectRatio: 1, // Mantén las proporciones originales de la imagen
+            resizeMode: 'contain', // Asegura que la imagen no se recorte
+            
+          }}
 
         />
       </View>
