@@ -3,6 +3,11 @@ import { View, Text, FlatList, Alert, TouchableOpacity, TextInput } from 'react-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL_BASE } from '@env';
 import globalStyles from '../../styles/global';
+import ActualizarTrabajador from './ActualizarTrabajador';
+
+
+
+
 
 const Empleado = () => {
   const [ID, setID] = useState(null);
@@ -12,6 +17,10 @@ const Empleado = () => {
   const [searchTerm, setSearchTerm] = useState("");  // Estado para el término de búsqueda
   const [data, setData] = useState([]);  // Estado para almacenar los datos de la colección
   const [filteredData, setFilteredData] = useState([]);  // Estado para el resultado de la búsqueda
+  const [modalEditarVisible, setModalEditarVisible] = useState(false);
+  const [selectedTrabajador, setSelectedTrabajador] = useState(null);  // Trabajador seleccionado para editar
+  const [showEditModal, setShowEditModal] = useState(false);  // Estado para mostrar el modal de editar trabajador
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,8 +84,37 @@ const Empleado = () => {
     setFilteredData(filtered);
   };
 
-  const handleEdit = (id) => {
-    console.log(`Editar empleado con ID: ${id}`);
+  const handleEdit = (IDtrabajador) => {
+    console.log(`Editar empleado con ID: ${IDtrabajador}`);
+    const trabajador = data.find((trabajador) => trabajador._id === IDtrabajador);
+    setSelectedTrabajador(trabajador);
+    setShowEditModal(true);  // Abre el modal de edición
+  };
+  // Función para cerrar el modal de edición
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedTrabajador(null);  // Limpia el trabajador seleccionado
+  };
+
+  // Función para actualizar la lista de trabajadores después de agregar uno
+  const handleAdd = () => {
+    const fetchData = async () => {
+
+
+
+      // Realizar la petición al backend
+      const response = await fetch(`${API_URL_BASE}trabajadores/recursos-humanos`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Encabezado de autorización
+        },
+      });
+      setData(response.data);
+      setFilteredData(response.data);
+
+    };
+    fetchData();
   };
 
   const openConfirmDialog = (id) => {
@@ -188,11 +226,11 @@ const Empleado = () => {
                 alignItems: 'center',                // Centrar texto horizontalmente
               }}
             >
-              <Text style={{ fontWeight: 'bold' }}>{item.nombre}</Text>
+              <Text style={{ fontWeight: 'bold' }}>{item.nombre || "Sin nombre"}</Text>
               <Text style={{ color: item.confirmado ? 'green' : 'red', fontWeight: 'bold' }}>
-                {item.email}
+                {item.email || "Sin correo"}
               </Text>
-              <View style={{alignSelf: 'stretch', flexDirection: 'row', marginTop: 10, justifyContent: 'space-between', alignItems: 'center' }}>
+              <View style={{ alignSelf: 'stretch', flexDirection: 'row', marginTop: 10, justifyContent: 'space-between', alignItems: 'center' }}>
                 <TouchableOpacity
                   style={[globalStyles.boton, { flexBasis: '40%', paddingVertical: 5, alignItems: 'center' }]}
                   onPress={() => handleEdit(item._id)}
@@ -212,6 +250,20 @@ const Empleado = () => {
       ) : (
         <Text>No se encontraron trabajadores</Text>
       )}
+
+
+
+
+
+      {showEditModal && (
+        <ActualizarTrabajador
+          trabajadorId={selectedTrabajador?._id}
+          onClose={handleCloseEditModal}
+          onUpdate={handleAdd}  // Recargar los datos después de actualizar
+        />
+      )}
+
+
     </View>
   );
 };
