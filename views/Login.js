@@ -5,6 +5,10 @@ import { useNavigation } from '@react-navigation/native'
 import globalStyles from '../styles/global';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ApiFetch } from '../config/apiFetch';
+import { API_URL_BASE} from '@env';
+
+
+
 
 
 
@@ -12,8 +16,7 @@ const Login = () => {
 
 
   const { width, height } = Dimensions.get('window');
-  console.log('dentro de login width:  ', width)
-  console.log('dentro de login height:  ', height)
+
   // State del formulario
   // Estado para controlar la visibilidad del modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -67,7 +70,7 @@ const Login = () => {
       };
 
       // Petición al backend
-      const respuesta = await fetch('http://192.168.1.133:4000/felman/usuarios/login', {
+      const respuesta = await fetch(`${API_URL_BASE}usuarios/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -77,11 +80,11 @@ const Login = () => {
 
       const resultado = await respuesta.json();
 
-      console.log('el resultado es :  ', resultado)
+
       const rolUSER = resultado.rol
       const dptoUSER = resultado.departamentos
       console.log('el rol es :  ', rolUSER)
-      console.log('el departmentos es :  ', dptoUSER)
+
 
       // Manejar la respuesta del servidor
       if (respuesta.ok) {
@@ -106,7 +109,7 @@ const Login = () => {
                 })),
               };
             }
-        
+
             // Si el title no está en los roles, dejamos los items desactivados
             return {
               ...depto,
@@ -130,12 +133,20 @@ const Login = () => {
 
         // Guardar datos en AsyncStorage
         const resultadoStr = JSON.stringify(resultado);
-       // console.log("Datos que se guardarán:", JSON.stringify(resultado, null, 2));
-        await AsyncStorage.setItem('usuario', resultadoStr); // Guarda el token
+
+        const { departamentos, ...resultadoSinDepartamentos } = resultado;
+        console.log("\nDatos que buscas:\n", JSON.stringify(resultadoSinDepartamentos, null, 2));
+        await AsyncStorage.setItem('ID', resultado._id)
+        await AsyncStorage.setItem('usuario', resultadoStr); // Guarda el usuario
         await AsyncStorage.setItem('token', resultado.token); // Guarda el token
         await AsyncStorage.setItem('email', resultado.email); // Guarda el correo
         await AsyncStorage.setItem('nombre', resultado.nombre); // Guarda el correo
         await AsyncStorage.setItem('departamentos', JSON.stringify(departamentosSotarege)); // 
+
+        if (resultado.usuarioId){
+          console.log('es un trabajador')
+          await AsyncStorage.setItem('usuarioID', resultado.usuarioId)
+        }
 
         // Opcional: limpiar el formulario
 

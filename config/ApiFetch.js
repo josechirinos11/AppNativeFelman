@@ -1,25 +1,36 @@
-// ApiFetch.js
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL_BASE} from '@env';
 
-export const ApiFetch = async (data, method, url, mensajeRespuestaError, customHeaders = {}) => {
+// ApiFetch centralizado
+export const ApiFetch = async ({ data, method = 'GET', url, mensajeRespuestaError = 'Ocurrió un error', customHeaders = {} }) => {
   try {
+    // Recuperar el token desde AsyncStorage
+    const token = await AsyncStorage.getItem('token');
+
     // Crear los encabezados básicos
     const headers = {
       'Content-Type': 'application/json',
       ...customHeaders, // Permite pasar encabezados personalizados
     };
 
+    // Si el token existe, añadirlo al encabezado Authorization con Bearer
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
     // Configurar la solicitud
     const config = {
-      method,
+      method, // GET, POST, PUT, DELETE, etc.
       headers,
     };
 
-    // Si el método es POST, PUT o PATCH, incluir el cuerpo
+    // Si el método requiere cuerpo, incluirlo
     if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
       config.body = JSON.stringify(data);
     }
 
-    const respuesta = await fetch(`http://192.168.1.133:4000/felman/${url}`, config);
+    // Realizar la solicitud con la URL base y la ruta
+    const respuesta = await fetch(`${API_URL_BASE}${url}`, config);
 
     // Verificar si la respuesta es exitosa
     if (!respuesta.ok) {
@@ -27,12 +38,11 @@ export const ApiFetch = async (data, method, url, mensajeRespuestaError, customH
       throw new Error(errorData.msg || mensajeRespuestaError);
     }
 
-    // Retornar los datos en caso de éxito
+    // Retornar los datos de la respuesta en caso de éxito
     const resultado = await respuesta.json();
     return resultado;
   } catch (error) {
-    // Manejo de errores
     console.error('Error FETCH:', error.message);
-    throw error; // Relanzar el error para manejarlo en el componente
+    throw error; // Relanzar el error para manejarlo en los componentes
   }
 };

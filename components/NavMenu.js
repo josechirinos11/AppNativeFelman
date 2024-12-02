@@ -37,8 +37,7 @@ const NavMenu = ({ nombreUser, emailUser }) => {
                 // Recuperar el string del usuario desde AsyncStorage
                 const usuarioStr = await AsyncStorage.getItem('usuario');
                 const departamentosStr = await AsyncStorage.getItem('departamentos');
-                console.log("usuarioStr: ", usuarioStr.departamentos)
-
+               
                 if (usuarioStr) {
                     // Parsear el string JSON a un objeto de JavaScript
                     const usuario = JSON.parse(usuarioStr);
@@ -46,9 +45,7 @@ const NavMenu = ({ nombreUser, emailUser }) => {
                     // Acceder al objeto 'departamentos'
                    // const departamentos = usuario.departamentos;
 
-                    //console.log("usuarioStr: ", usuarioStr);
-                    console.log("usuario: ", usuario);
-                    console.log("Departamentos: ", departamentos);
+                  
 
              
                         // Crear los nuevos items de menú, filtrando y mapeando según lo que necesitas
@@ -60,8 +57,7 @@ const NavMenu = ({ nombreUser, emailUser }) => {
                         }));
 
                         setMenuItemsActualizada(nuevaMenuItems); // Si es administrador, actualizamos el menú con los nuevos items
-                        console.log("El MENU es: ", nuevaMenuItems); // Muestra el resultado en consola
-            
+                     
                 } else {
                     console.log("No se encontró 'usuario' en AsyncStorage.");
                 }
@@ -85,6 +81,8 @@ const NavMenu = ({ nombreUser, emailUser }) => {
             await AsyncStorage.removeItem('email');
             await AsyncStorage.removeItem('nombre');
             await AsyncStorage.removeItem('usuario');
+            await AsyncStorage.removeItem('usuarioID');
+            await AsyncStorage.removeItem('ID');
             console.log('Usuario ha cerrado sesión');
             navigation.navigate('Login');
             // Aquí puedes agregar la lógica para navegar a la pantalla de inicio de sesión o realizar otras acciones

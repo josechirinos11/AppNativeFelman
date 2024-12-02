@@ -1,6 +1,11 @@
 import { StyleSheet, YellowBox } from 'react-native';
 
 const globalStyles = StyleSheet.create({
+    contenedorScroll: {
+        flexGrow: 1,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+      },
     contenedor: {
         flex: 1,
         backgroundColor: 'rgb(243 244 246)'
@@ -64,17 +69,27 @@ const globalStyles = StyleSheet.create({
         marginBottom: 20
     },
     boton: {
-
-        flex: 1,
-        backgroundColor: 'rgb(239, 68, 68)',  // Color de fondo
-
-        width: '70%',                          // Ancho deseado (puedes ajustar el porcentaje o usar un valor fijo)
-        marginTop: 10,                   // Espacio vertical alrededor del botón
-        justifyContent: 'center',              // Centrar texto verticalmente
-        alignItems: 'center',                  // Centrar texto horizontalmente
-
-
+        backgroundColor: 'rgb(239, 68, 68)', // Color de fondo
+        width: '50%',                        // Ancho deseado
+        marginTop: 10,                       // Espacio vertical
+        justifyContent: 'center',            // Centrar texto verticalmente
+        alignItems: 'center',                // Centrar texto horizontalmente
+        borderWidth: 0,                      // Grosor del borde
+        borderColor: 'black',                // Color del borde
+        borderRadius: 5,                     // Bordes redondeados
+        paddingVertical: 10,                 // Espaciado interno
+        // Sombra para iOS
+        shadowColor: 'rgb(239, 68, 68)',     // Color de la sombra (relacionado con el fondo)
+        shadowOffset: {
+          width: 0,                          // Desplazamiento horizontal
+          height: 3,                         // Desplazamiento vertical
+        },
+        shadowOpacity: 0.5,                  // Opacidad de la sombra
+        shadowRadius: 4,                     // Radio de difusión de la sombra
+        // Sombra para Android
+        elevation: 5,                        // Intensidad de la sombra
     },
+    
     botonTexto: {
 
         textTransform: 'uppercase',
