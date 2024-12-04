@@ -70,7 +70,7 @@ const Login = () => {
       };
 
       // Petición al backend
-      const respuesta = await fetch(`${API_URL_BASE}usuarios/login`, {
+      const respuesta = await fetch(`${API_URL_BASE}/usuarios/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
