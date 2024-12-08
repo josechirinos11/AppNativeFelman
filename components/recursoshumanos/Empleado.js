@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL_BASE } from '@env';
 import globalStyles from '../../styles/global';
 import ActualizarTrabajador from './ActualizarTrabajador';
+import AgregarUsuarioTrabajador from '../AgregarUsuarioTrabajador';
 
 
 
@@ -20,13 +21,14 @@ const Empleado = () => {
   const [modalEditarVisible, setModalEditarVisible] = useState(false);
   const [selectedTrabajador, setSelectedTrabajador] = useState(null);  // Trabajador seleccionado para editar
   const [showEditModal, setShowEditModal] = useState(false);  // Estado para mostrar el modal de editar trabajador
-
+  const [showModal, setShowModal] = useState(false);  // Estado para mostrar el modal de agregar trabajador
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Obtener token
         const token = await AsyncStorage.getItem('token');
+        console.log("Token obtenido:", token);
         if (!token) throw new Error('Token no encontrado');
 
         // Obtener el ID del usuario
@@ -37,7 +39,7 @@ const Empleado = () => {
         setID(storedID);
 
         // Realizar la petición al backend
-        const respuesta = await fetch(`${API_URL_BASE}trabajadores/recursos-humanos`, {
+        const respuesta = await fetch(`${API_URL_BASE}/trabajadores/recursos-humanos`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -72,6 +74,15 @@ const Empleado = () => {
     fetchData();
   }, []);  // Solo ejecuta al montar el componente
 
+
+  // Función para mostrar y ocultar el modal de agregar trabajador
+  const handleModalToggle = () => {
+    setShowModal(!showModal);
+  };
+
+
+
+
   const handleSearch = (text) => {
     setSearchTerm(text);  // Actualiza el término de búsqueda
 
@@ -103,7 +114,7 @@ const Empleado = () => {
 
 
       // Realizar la petición al backend
-      const response = await fetch(`${API_URL_BASE}trabajadores/recursos-humanos`, {
+      const response = await fetch(`${API_URL_BASE}/trabajadores/recursos-humanos`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +128,66 @@ const Empleado = () => {
     fetchData();
   };
 
+
+
+
+
   const openConfirmDialog = (id) => {
+
+    // Función para eliminar un trabajador
+    const handleDelete = async (IDtrabajador) => {
+      try {
+        // Obtener el token del almacenamiento
+        const token = await AsyncStorage.getItem("token");
+        if (!token) {
+          console.error("Token no encontrado");
+          Alert.alert("Error", "No se encontró el token de autenticación.");
+          return;
+        }
+
+        // Solicitud para eliminar el trabajador
+        const deleteResponse = await fetch(
+          `${API_URL_BASE}/trabajadores/recursos-humanos/${IDtrabajador}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Encabezado de autorización
+            },
+          }
+        );
+
+        if (!deleteResponse.ok) {
+          throw new Error(`Error al eliminar trabajador: ${deleteResponse.status}`);
+        }
+
+        const deleteData = await deleteResponse.json();
+        Alert.alert("Éxito", deleteData.mensaje);
+
+        // Recargar la lista de trabajadores
+        const listResponse = await fetch(`${API_URL_BASE}/trabajadores/recursos-humanos`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Encabezado de autorización
+          },
+        });
+
+        if (!listResponse.ok) {
+          throw new Error(`Error al obtener la lista de trabajadores: ${listResponse.status}`);
+        }
+
+        const updatedData = await listResponse.json();
+        setData(updatedData); // Actualizar el estado de los trabajadores
+        setFilteredData(updatedData); // Actualizar el estado filtrado si es necesario
+      } catch (error) {
+        console.error("Error al eliminar el trabajador:", error.message);
+        Alert.alert("Error", "Ocurrió un error al intentar eliminar el trabajador.");
+      }
+    };
+
+
+
     Alert.alert(
       "Confirmar eliminación",
       "¿Estás seguro de que quieres eliminar a este trabajador?",
@@ -176,7 +246,7 @@ const Empleado = () => {
               width: '100%',
             },
           ]}
-          onPress={() => console.log('Agregar trabajador')}
+          onPress={handleModalToggle}
         >
           <Text style={{ color: 'white', fontWeight: 'bold' }}>Agregar Trabajador</Text>
         </TouchableOpacity>
@@ -254,6 +324,12 @@ const Empleado = () => {
 
 
 
+      {showModal && (
+        <AgregarUsuarioTrabajador
+         onClose={handleModalToggle}
+         onAdd={handleAdd}
+         />
+      )}
 
       {showEditModal && (
         <ActualizarTrabajador

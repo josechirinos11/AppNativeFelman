@@ -15,6 +15,7 @@ import despacho from '../img/despacho.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
 
+
 export default function Ajustes() {
   const { width, height } = Dimensions.get('window');
   const route = useRoute();
